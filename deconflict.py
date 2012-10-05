@@ -5,13 +5,28 @@ def main():
     pass
 
 
-class ConflictMarker(object):
+class State(object):
     
     def __init__(self, name):
         self.name = name
     
     def __repr__(self):
-        return '%s(%s)' % (self.__class__.__name__, self.name)
+        return self.__class__.__name__ + '.' + self.name
+
+State.COMMON = State('COMMON')
+State.OURS = State('OURS')
+State.ANCESTOR = State('ANCESTOR')
+State.THEIRS = State('THEIRS')
+
+
+class ConflictMarker(object):
+    
+    def __init__(self, name, triggered_state):
+        self.name = name
+        self.triggered_state = triggered_state
+    
+    def __repr__(self):
+        return self.__class__.__name__ + '.' + self.name
 
     @classmethod
     def identify(cls, line):
@@ -27,10 +42,10 @@ class ConflictMarker(object):
             return None
     
 
-ConflictMarker.BEGIN = ConflictMarker('BEGIN')
-ConflictMarker.ANCESTOR = ConflictMarker('ANCESTOR')
-ConflictMarker.DELIMITER = ConflictMarker('DELIMITER')
-ConflictMarker.END = ConflictMarker('END')
+ConflictMarker.BEGIN = ConflictMarker('BEGIN', State.OURS)
+ConflictMarker.ANCESTOR = ConflictMarker('ANCESTOR', State.ANCESTOR)
+ConflictMarker.DELIMITER = ConflictMarker('DELIMITER', State.THEIRS)
+ConflictMarker.END = ConflictMarker('END', State.COMMON)
 
 
 if __name__ == "__main__":

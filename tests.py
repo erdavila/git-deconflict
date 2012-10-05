@@ -1,9 +1,9 @@
 import unittest
 
-from deconflict import ConflictMarker
+from deconflict import ConflictMarker, State
 
 
-class MarkerTest(unittest.TestCase):
+class MarkersTest(unittest.TestCase):
 
     def test_conflict_begin_marker(self):
         marker = ConflictMarker.identify('<<<<<<< HEAD')
@@ -24,3 +24,18 @@ class MarkerTest(unittest.TestCase):
     def test_not_marker(self):
         marker = ConflictMarker.identify('hello')
         self.assertIs(marker, None)
+
+
+class StateTriggeredByMarkersTest(unittest.TestCase):
+    
+    def test_conflict_begin_marker_triggers_ours_state(self):
+        self.assertEqual(ConflictMarker.BEGIN.triggered_state, State.OURS);
+    
+    def test_conflict_ancestor_marker_triggers_ancestor_state(self):
+        self.assertEqual(ConflictMarker.ANCESTOR.triggered_state, State.ANCESTOR);
+    
+    def test_conflict_delimiter_marker_triggers_theirs_state(self):
+        self.assertEqual(ConflictMarker.DELIMITER.triggered_state, State.THEIRS);
+    
+    def test_conflict_end_marker_triggers_common_state(self):
+        self.assertEqual(ConflictMarker.END.triggered_state, State.COMMON);
