@@ -1,9 +1,62 @@
-#!/bin/env python
+#!/usr/bin/env python
+from __future__ import print_function
 import os.path
+import sys
 
 
 def main():
-    pass
+    input_filename = sys.argv[1]
+    Main(input_filename).run()
+    
+
+class Main(object):
+    
+    def __init__(self, input_filename):
+        self.input_filename = input_filename
+
+    def run(self):
+        self.open_output_files()
+        self.show_output_file_names()
+        self.process_lines_from_input_file()
+        self.close_output_files()
+
+    def open_output_files(self):
+        self.output_files = {}
+        for output in Output.ALL:
+            output_filename = output.make_filename(self.input_filename)
+            output_file = open(output_filename, 'w')
+            self.output_files[output] = output_file
+    
+    def show_output_file_names(self):
+        print('Writing the following files:')
+        for output in Output.ALL:
+            print('\t', self.output_files[output].name)
+    
+    def process_lines_from_input_file(self):
+        with open(self.input_filename) as input_file:
+            self.state = State.COMMON
+            self.process_lines(input_file)
+
+    def process_lines(self, input_file):
+        for line in input_file:
+            self.process_line(line)
+
+    def process_line(self, line):
+        marker = ConflictMarker.identify(line)
+        if marker is None:
+            self.write_line_to_outputs(line)
+        else:
+            self.state = marker.triggered_state
+
+    def write_line_to_outputs(self, line):
+        for output in self.state.outputs:
+            output = self.output_files[output]
+            output.write(line)
+
+    def close_output_files(self):
+        for output in self.output_files.itervalues():
+            output.close()
+
 
 
 class Output(object):
@@ -16,9 +69,9 @@ class Output(object):
         base, ext = os.path.splitext(filename)
         return base + '.' + self.file_designator + ext
 
-Output.ANCESTOR = Output('ANCESTOR', '1')
-Output.OURS = Output('OURS', '2')
-Output.THEIRS = Output('THEIRS', '3')
+Output.ANCESTOR = Output('ANCESTOR', 'ancestor')
+Output.OURS = Output('OURS', 'ours')
+Output.THEIRS = Output('THEIRS', 'theirs')
 
 Output.ALL = (Output.ANCESTOR, Output.OURS, Output.THEIRS)
 

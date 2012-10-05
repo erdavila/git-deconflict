@@ -81,29 +81,29 @@ class OutputFilenamesTests(unittest.TestCase):
     def test_ancestor_filename(self):
         filename = 'abc/123/xyz.ext'
         ancestor_filename = Output.ANCESTOR.make_filename(filename)
-        self.assertEqual(ancestor_filename, 'abc/123/xyz.1.ext')
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.ancestor.ext')
     
     def test_ours_filename(self):
         filename = 'abc/123/xyz.ext'
         ancestor_filename = Output.OURS.make_filename(filename)
-        self.assertEqual(ancestor_filename, 'abc/123/xyz.2.ext')
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.ours.ext')
     
     def test_theirs_filename(self):
         filename = 'abc/123/xyz.ext'
         ancestor_filename = Output.THEIRS.make_filename(filename)
-        self.assertEqual(ancestor_filename, 'abc/123/xyz.3.ext')
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.theirs.ext')
    
     def test_ancestor_filename_without_extension(self):
         filename = 'abc/123/xyz'
         ancestor_filename = Output.ANCESTOR.make_filename(filename)
-        self.assertEqual(ancestor_filename, 'abc/123/xyz.1')
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.ancestor')
     
     def test_ours_filename_without_extension(self):
         filename = 'abc/123/xyz'
         ancestor_filename = Output.OURS.make_filename(filename)
-        self.assertEqual(ancestor_filename, 'abc/123/xyz.2')
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.ours')
     
     def test_theirs_filename_without_extension(self):
         filename = 'abc/123/xyz'
         ancestor_filename = Output.THEIRS.make_filename(filename)
-        self.assertEqual(ancestor_filename, 'abc/123/xyz.3')
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.theirs')
