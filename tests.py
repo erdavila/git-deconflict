@@ -1,7 +1,6 @@
 import unittest
 
-from deconflict import ConflictMarker, State, FileKey, make_ancestor_filename,\
-    make_ours_filename, make_theirs_filename
+from deconflict import ConflictMarker, State, Output
 
 
 class MarkersTest(unittest.TestCase):
@@ -42,69 +41,69 @@ class StateTriggeredByMarkersTest(unittest.TestCase):
         self.assertEqual(ConflictMarker.END.triggered_state, State.COMMON);
 
 
-class FileKeysByStatesTest(unittest.TestCase):
+class OutputsByStatesTest(unittest.TestCase):
     
-    def test_file_keys_in_common_state(self):
-        keys = State.COMMON.file_keys
+    def test_outputs_in_common_state(self):
+        outputs = State.COMMON.outputs
         
-        self.assertEqual(len(keys), 3)
-        self.assertIn(FileKey.ANCESTOR, keys)
-        self.assertIn(FileKey.OURS, keys)
-        self.assertIn(FileKey.THEIRS, keys)
+        self.assertEqual(len(outputs), 3)
+        self.assertIn(Output.ANCESTOR, outputs)
+        self.assertIn(Output.OURS, outputs)
+        self.assertIn(Output.THEIRS, outputs)
     
-    def test_file_keys_in_ours_state(self):
-        keys = State.OURS.file_keys
+    def test_outputs_in_ours_state(self):
+        outputs = State.OURS.outputs
         
-        self.assertEqual(len(keys), 1)
-        self.assertNotIn(FileKey.ANCESTOR, keys)
-        self.assertIn(FileKey.OURS, keys)
-        self.assertNotIn(FileKey.THEIRS, keys)
+        self.assertEqual(len(outputs), 1)
+        self.assertNotIn(Output.ANCESTOR, outputs)
+        self.assertIn(Output.OURS, outputs)
+        self.assertNotIn(Output.THEIRS, outputs)
     
-    def test_file_keys_in_ancestor_state(self):
-        keys = State.ANCESTOR.file_keys
+    def test_outputs_in_ancestor_state(self):
+        outputs = State.ANCESTOR.outputs
         
-        self.assertEqual(len(keys), 1)
-        self.assertIn(FileKey.ANCESTOR, keys)
-        self.assertNotIn(FileKey.OURS, keys)
-        self.assertNotIn(FileKey.THEIRS, keys)
+        self.assertEqual(len(outputs), 1)
+        self.assertIn(Output.ANCESTOR, outputs)
+        self.assertNotIn(Output.OURS, outputs)
+        self.assertNotIn(Output.THEIRS, outputs)
     
-    def test_file_keys_in_theirs_state(self):
-        keys = State.THEIRS.file_keys
+    def test_outputs_in_theirs_state(self):
+        outputs = State.THEIRS.outputs
         
-        self.assertEqual(len(keys), 1)
-        self.assertNotIn(FileKey.ANCESTOR, keys)
-        self.assertNotIn(FileKey.OURS, keys)
-        self.assertIn(FileKey.THEIRS, keys)
+        self.assertEqual(len(outputs), 1)
+        self.assertNotIn(Output.ANCESTOR, outputs)
+        self.assertNotIn(Output.OURS, outputs)
+        self.assertIn(Output.THEIRS, outputs)
 
 
 class OutputFilenamesTests(unittest.TestCase):
     
     def test_ancestor_filename(self):
         filename = 'abc/123/xyz.ext'
-        ancestor_filename = make_ancestor_filename(filename)
+        ancestor_filename = Output.ANCESTOR.make_filename(filename)
         self.assertEqual(ancestor_filename, 'abc/123/xyz.1.ext')
     
     def test_ours_filename(self):
         filename = 'abc/123/xyz.ext'
-        ancestor_filename = make_ours_filename(filename)
+        ancestor_filename = Output.OURS.make_filename(filename)
         self.assertEqual(ancestor_filename, 'abc/123/xyz.2.ext')
     
     def test_theirs_filename(self):
         filename = 'abc/123/xyz.ext'
-        ancestor_filename = make_theirs_filename(filename)
+        ancestor_filename = Output.THEIRS.make_filename(filename)
         self.assertEqual(ancestor_filename, 'abc/123/xyz.3.ext')
    
     def test_ancestor_filename_without_extension(self):
         filename = 'abc/123/xyz'
-        ancestor_filename = make_ancestor_filename(filename)
+        ancestor_filename = Output.ANCESTOR.make_filename(filename)
         self.assertEqual(ancestor_filename, 'abc/123/xyz.1')
     
     def test_ours_filename_without_extension(self):
         filename = 'abc/123/xyz'
-        ancestor_filename = make_ours_filename(filename)
+        ancestor_filename = Output.OURS.make_filename(filename)
         self.assertEqual(ancestor_filename, 'abc/123/xyz.2')
     
     def test_theirs_filename_without_extension(self):
         filename = 'abc/123/xyz'
-        ancestor_filename = make_theirs_filename(filename)
+        ancestor_filename = Output.THEIRS.make_filename(filename)
         self.assertEqual(ancestor_filename, 'abc/123/xyz.3')

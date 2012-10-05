@@ -6,41 +6,36 @@ def main():
     pass
 
 
-def make_ancestor_filename(filename):
-    return make_output_filename(filename, '1')
-
-def make_ours_filename(filename):
-    return make_output_filename(filename, '2')
-
-def make_theirs_filename(filename):
-    return make_output_filename(filename, '3')
-
-def make_output_filename(filename, num):
-    base, ext = os.path.splitext(filename)
-    return base + '.' + num + ext
+class Output(object):
     
-
-
-class FileKey(object):
+    def __init__(self, name, file_designator):
+        self.name = name
+        self.file_designator = file_designator
     
-    ANCESTOR = 'ANCESTOR'
-    OURS = 'OURS'
-    THEIRS = 'THEIRS'
+    def make_filename(self, filename):
+        base, ext = os.path.splitext(filename)
+        return base + '.' + self.file_designator + ext
+
+Output.ANCESTOR = Output('ANCESTOR', '1')
+Output.OURS = Output('OURS', '2')
+Output.THEIRS = Output('THEIRS', '3')
+
+Output.ALL = (Output.ANCESTOR, Output.OURS, Output.THEIRS)
 
 
 class State(object):
     
-    def __init__(self, name, file_keys):
+    def __init__(self, name, outputs):
         self.name = name
-        self.file_keys = file_keys
+        self.outputs = outputs
     
     def __repr__(self):
         return self.__class__.__name__ + '.' + self.name
 
-State.COMMON = State('COMMON', (FileKey.ANCESTOR, FileKey.OURS, FileKey.THEIRS,))
-State.OURS = State('OURS', (FileKey.OURS,))
-State.ANCESTOR = State('ANCESTOR', (FileKey.ANCESTOR,))
-State.THEIRS = State('THEIRS', (FileKey.THEIRS,))
+State.COMMON = State('COMMON', (Output.ANCESTOR, Output.OURS, Output.THEIRS,))
+State.OURS = State('OURS', (Output.OURS,))
+State.ANCESTOR = State('ANCESTOR', (Output.ANCESTOR,))
+State.THEIRS = State('THEIRS', (Output.THEIRS,))
 
 
 class ConflictMarker(object):
