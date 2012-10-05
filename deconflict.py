@@ -1,8 +1,24 @@
 #!/bin/env python
+import os.path
 
 
 def main():
     pass
+
+
+def make_ancestor_filename(filename):
+    return make_output_filename(filename, '1')
+
+def make_ours_filename(filename):
+    return make_output_filename(filename, '2')
+
+def make_theirs_filename(filename):
+    return make_output_filename(filename, '3')
+
+def make_output_filename(filename, num):
+    base, ext = os.path.splitext(filename)
+    return base + '.' + num + ext
+    
 
 
 class FileKey(object):

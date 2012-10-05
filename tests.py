@@ -1,6 +1,7 @@
 import unittest
 
-from deconflict import ConflictMarker, State, FileKey
+from deconflict import ConflictMarker, State, FileKey, make_ancestor_filename,\
+    make_ours_filename, make_theirs_filename
 
 
 class MarkersTest(unittest.TestCase):
@@ -74,3 +75,36 @@ class FileKeysByStatesTest(unittest.TestCase):
         self.assertNotIn(FileKey.ANCESTOR, keys)
         self.assertNotIn(FileKey.OURS, keys)
         self.assertIn(FileKey.THEIRS, keys)
+
+
+class OutputFilenamesTests(unittest.TestCase):
+    
+    def test_ancestor_filename(self):
+        filename = 'abc/123/xyz.ext'
+        ancestor_filename = make_ancestor_filename(filename)
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.1.ext')
+    
+    def test_ours_filename(self):
+        filename = 'abc/123/xyz.ext'
+        ancestor_filename = make_ours_filename(filename)
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.2.ext')
+    
+    def test_theirs_filename(self):
+        filename = 'abc/123/xyz.ext'
+        ancestor_filename = make_theirs_filename(filename)
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.3.ext')
+   
+    def test_ancestor_filename_without_extension(self):
+        filename = 'abc/123/xyz'
+        ancestor_filename = make_ancestor_filename(filename)
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.1')
+    
+    def test_ours_filename_without_extension(self):
+        filename = 'abc/123/xyz'
+        ancestor_filename = make_ours_filename(filename)
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.2')
+    
+    def test_theirs_filename_without_extension(self):
+        filename = 'abc/123/xyz'
+        ancestor_filename = make_theirs_filename(filename)
+        self.assertEqual(ancestor_filename, 'abc/123/xyz.3')
