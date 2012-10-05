@@ -1,0 +1,50 @@
+hello
+
+unchanged content
+we are changing this line
+unchanged content
+
+unchanged content
+they are changing this line
+unchanged content
+
+unchanged content
+everybody is changing this line
+unchanged content
+
+unchanged content
+<<<<<<< HEAD
+we are changing this line
+||||||| merged common ancestors
+this line will be changed differently by us and them
+=======
+they are changing this line
+>>>>>>> them
+unchanged content
+
+unchanged content
+unchanged content
+
+unchanged content
+unchanged content
+
+unchanged content
+unchanged content
+
+unchanged content
+<<<<<<< HEAD
+||||||| merged common ancestors
+this line will be deleted by us and changed by them
+=======
+they are changing this line
+>>>>>>> them
+unchanged content
+
+unchanged content
+<<<<<<< HEAD
+we are changing this line
+||||||| merged common ancestors
+this line will be changed by us and deleted by them
+=======
+>>>>>>> them
+unchanged content
