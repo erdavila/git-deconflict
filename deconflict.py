@@ -5,18 +5,26 @@ def main():
     pass
 
 
+class FileKey(object):
+    
+    ANCESTOR = 'ANCESTOR'
+    OURS = 'OURS'
+    THEIRS = 'THEIRS'
+
+
 class State(object):
     
-    def __init__(self, name):
+    def __init__(self, name, file_keys):
         self.name = name
+        self.file_keys = file_keys
     
     def __repr__(self):
         return self.__class__.__name__ + '.' + self.name
 
-State.COMMON = State('COMMON')
-State.OURS = State('OURS')
-State.ANCESTOR = State('ANCESTOR')
-State.THEIRS = State('THEIRS')
+State.COMMON = State('COMMON', (FileKey.ANCESTOR, FileKey.OURS, FileKey.THEIRS,))
+State.OURS = State('OURS', (FileKey.OURS,))
+State.ANCESTOR = State('ANCESTOR', (FileKey.ANCESTOR,))
+State.THEIRS = State('THEIRS', (FileKey.THEIRS,))
 
 
 class ConflictMarker(object):
@@ -40,7 +48,6 @@ class ConflictMarker(object):
             return ConflictMarker.END
         else:
             return None
-    
 
 ConflictMarker.BEGIN = ConflictMarker('BEGIN', State.OURS)
 ConflictMarker.ANCESTOR = ConflictMarker('ANCESTOR', State.ANCESTOR)
