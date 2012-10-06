@@ -2,6 +2,7 @@
 from __future__ import print_function
 import os.path
 import sys
+from collections import defaultdict
 
 
 def main():
@@ -13,12 +14,14 @@ class Main(object):
     
     def __init__(self, input_filename):
         self.input_filename = input_filename
+        self.markers_count = defaultdict(int)
 
     def run(self):
         self.open_output_files()
         self.show_output_file_names()
         self.process_lines_from_input_file()
         self.close_output_files()
+        self.check_marker_counts()
 
     def open_output_files(self):
         self.output_files = {}
@@ -47,16 +50,29 @@ class Main(object):
             self.write_line_to_outputs(line)
         else:
             self.state = marker.triggered_state
+            self.account_marker(marker)
 
     def write_line_to_outputs(self, line):
         for output in self.state.outputs:
             output = self.output_files[output]
             output.write(line)
-
+    
+    def account_marker(self, marker):
+        self.markers_count[marker] += 1
+    
     def close_output_files(self):
         for output in self.output_files.itervalues():
             output.close()
-
+    
+    def check_marker_counts(self):
+        msg = None
+        if self.markers_count[ConflictMarker.BEGIN] == 0:
+            msg = 'No conflicts found!'
+        elif self.markers_count[ConflictMarker.ANCESTOR] == 0:
+            msg = 'No ancestor blocks found (the ancestor file is irrelevant)'
+        if msg:
+            print()
+            print(msg)
 
 
 class Output(object):
